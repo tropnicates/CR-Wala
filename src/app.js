@@ -9,6 +9,7 @@ import { connectDB } from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
 import adminRoutes from "./routes/adminRoutes.js";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
+import "./config/auth.js";
 
 dotenv.config();
 connectDB();

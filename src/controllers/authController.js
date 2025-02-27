@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { sendResetEmail } from "../utils/email.js";
 import passport from "passport"; 
 import { createRequire } from "module";
+import Enquiry from "../models/Enquiry.js";
 
 const require = createRequire(import.meta.url);
 const crypto = require("crypto");
@@ -229,3 +230,20 @@ export const changeUserStatusInactive = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 }
+
+export const sendEnquiry = async (req, res) => {
+  try {
+    const { name, email, address, phone, budget, goals } = req.body;
+
+    if (!name || !email || !address || !phone || !budget || !goals) {
+      return res.status(400).json({ success: false, error: "All fields are required" });
+    }
+
+    const enquiry = new Enquiry({ name, email, address, phone, budget, goals });
+    await enquiry.save();
+
+    res.status(201).json({ success: true, message: "Enquiry submitted successfully", enquiry });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
