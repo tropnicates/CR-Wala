@@ -10,7 +10,6 @@ import authRoutes from './routes/authRoutes.js';
 import adminRoutes from "./routes/adminRoutes.js";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
 
-
 dotenv.config();
 connectDB();
 
