@@ -11,7 +11,6 @@ import adminRoutes from "./routes/adminRoutes.js";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
 import "./config/auth.js";
 
-
 dotenv.config();
 connectDB();
 
