@@ -1,7 +1,6 @@
 import express from 'express';
 import session from "express-session";
 import dotenv from 'dotenv';
-// import cors from "cors";
 import morgan from 'morgan';
 import passport from 'passport';
 import cookieParser from "cookie-parser";
