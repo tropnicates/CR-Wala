@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from "passport";
-import { register, login, logout, getProfile, editProfile,  forgotPassword, resetPassword,getAllUsers, changeUserStatusActive,changeUserStatusInactive,sendEnquiry} from '../controllers/authController.js';
+import { register, login, logout, getProfile,  forgotPassword, resetPassword,getAllUsers, changeUserStatusActive,changeUserStatusInactive,sendEnquiry,editProfile} from '../controllers/authController.js';
 import { isAuthenticated } from '../middlewares/authMiddleware.js';
 // import passport from "passport";
 import jwt from "jsonwebtoken";
@@ -27,6 +27,7 @@ router.get('/',getAllUsers);
 router.put('/:id/active',changeUserStatusActive);
 router.put('/:id/inactive',changeUserStatusInactive);
 router.post('/enquiry', sendEnquiry);
+router.put('edit-profile', isAuthenticated, editProfile);
 
 // router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 

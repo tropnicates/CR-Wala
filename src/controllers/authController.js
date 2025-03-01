@@ -48,6 +48,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    req.user=await User.findOne({ email: email.toLowerCase() });
     if (!email || !password) {
       return res.status(400).json({ success: false, error: "Email and password are required" });
     }
@@ -73,7 +74,7 @@ export const login = async (req, res) => {
         message: "Login successful",
         user: { _id: user._id, userName: user.userName, email: user.email, token },
       });
-
+      
   } catch (error) {
     console.error("Login Error:", error);
     res.status(500).json({ success: false, error: "Internal Server Error" });
@@ -95,34 +96,6 @@ export const logout = (req, res) => {
     .status(200)
     .json({ success: true, message: "Logged out successfully" });
 };
-
-export const editProfile = async (req, res) => {
-  try {
-    const { email } = req.body;
-    const userId = req.user._id; 
-
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({ success: false, error: "User not found" });
-    }
-
-    if (email) {
-      user.email = email;
-    }
-
-    await user.save();
-
-    res.json({
-      success: true,
-      message: "Profile updated successfully",
-      user: { _id: user._id, userName: user.userName, email: user.email },
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
-
 
 export const forgotPassword = async (req, res) => {
   try {
@@ -243,6 +216,41 @@ export const sendEnquiry = async (req, res) => {
     await enquiry.save();
 
     res.status(201).json({ success: true, message: "Enquiry submitted successfully", enquiry });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+export const editProfile = async (req, res) => {
+  try {
+    const {name,email,password,dob,country } = req.body;
+    const userId = req.user._id;
+    const user = await User .findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, error: "User not found" });
+    }
+    if (name) {
+      user.name = name;
+    }
+    if (email) {
+      user.email = email;
+    }
+    if (password) {
+      user.password = password;
+    }
+    if (dob) {
+      user.dob = dob;
+    }
+    if (country) {
+      user.country = country;
+    }
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Profile updated successfully",
+      user: { _id: user._id, name: user.name, email: user.email, dob: user.dob, country: user.country },
+    });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

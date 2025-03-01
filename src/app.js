@@ -9,6 +9,7 @@ import { connectDB } from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
 import adminRoutes from "./routes/adminRoutes.js";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
+import orderRoutes from './routes/orderRoutes.js';
 import "./config/auth.js";
 
 dotenv.config();
@@ -36,6 +37,7 @@ app.use(passport.session());
 
 app.use('/api/auth', authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use('/api/orders', orderRoutes);
 
 app.get('/', (req, res) => {
     res.send({ message: 'API is running...' });

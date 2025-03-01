@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
-export const isAuthenticated = (req, res, next) => {
+
+export const isAuthenticated =  async(req, res, next) => {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
   console.log("Token from request:", token);
@@ -11,7 +13,7 @@ export const isAuthenticated = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    req.user = await User.findById(decoded.id).select('-password');
     console.log("Decoded User:", req.user);
     next();
   } catch (error) {
