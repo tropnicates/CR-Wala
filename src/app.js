@@ -10,6 +10,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
 import orderRoutes from './routes/orderRoutes.js';
 import "./config/auth.js";
+import cors from 'cors';
 
 dotenv.config();
 connectDB();
@@ -26,10 +27,13 @@ app.use(
   })
 );
 
-app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
+
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use(passport.initialize());  
 app.use(passport.session());
 
