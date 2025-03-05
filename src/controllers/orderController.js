@@ -1,39 +1,48 @@
 import Order from "../models/Order.js";
 
 export const addOrderItems = async (req, res) => {
-    const { subtotal, total } = req.body;
+  const {
+    orderItems,
+    shippingAddress,
+    paymentMethod,
+    totalPrice,
+  } = req.body;
 
-    if (!subtotal || !total) {
-        return res.status(400).json({ success: false, error: "Subtotal and Total are required" });
-    }
+  if (orderItems && orderItems.length === 0) {
+    return res.status(400).json({ success: false, error: "No order items" });
+  }
 
-    try {
-        const order = new Order({
-            user: req.user._id,
-            subtotal,
-            total,
-        });
+  try {
+    const order = new Order({
+      orderItems,
+      user: req.user._id,
+      shippingAddress,
+      paymentMethod,
+      totalPrice,
+    });
 
-        const createdOrder = await order.save();
-        res.status(201).json(createdOrder);
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
+    const createdOrder = await order.save();
+    res.status(201).json(createdOrder);
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 };
 
 export const updateOrderToPaid = async (req, res) => {
-  try {
-      const order = await Order.findById(req.params.id);
-      if (!order) {
-          return res.status(404).json({ success: false, error: "Order not found" });
-      }
-
-      order.isPaid = true;
-      order.paidAt = Date.now();
-
-      const updatedOrder = await order.save();
-      res.status(200).json(updatedOrder);
-  } catch (error) {
-      res.status(500).json({ success: false, error: error.message });
-  }
-};
+    const order = await Order.findById(req.params.id)
+    if (order) {
+        order.isPaid = true
+        order.paidAt = Date.now()
+        order.paymentResult = {
+            id: req.body.id,
+            status: req.body.status,
+            update_time: req.body.update_time,
+            email_address: req.body.payer.email_address,
+        }
+        const updatedOrder = await order.save()
+        res.status(200).json(updatedOrder)
+    } else {
+        res.status(404)
+        throw new Error('Order not found')
+    }
+}
