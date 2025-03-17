@@ -28,7 +28,7 @@ app.use(
 );
 
 app.use(cors({
-  origin: 'https://c-rwala.vercel.app',
+  origin: ['https://c-rwala.vercel.app', 'http://localhost:5173'],
   credentials: true
 }));
 
